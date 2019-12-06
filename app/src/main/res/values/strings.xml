@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Easy Explorer</string>
+    <string name="btn_plus">Plus</string>
+    <string name="btn_search">Search</string>
+</resources>
