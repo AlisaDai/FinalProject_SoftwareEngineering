@@ -36,6 +36,12 @@ public class Folder {
         return fileNames;
     }
 
+    public String getParentPath(){
+        File file = new File(currentPath);
+        file = file.getParentFile();
+        return file.getPath();
+    }
+
     public ArrayList<String> getParentPaths(){
         ArrayList<String> tmpPaths = new ArrayList<String>();
         File file = new File(currentPath);

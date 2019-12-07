@@ -7,7 +7,6 @@ import androidx.core.content.ContextCompat;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -78,6 +77,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
+            case R.id.home:
+                currentPath = Environment.getRootDirectory().getPath();
+                paths = new ArrayList<>();
+                paths.add(currentPath);
+                updateFolder();
+                return true;
             case R.id.search:
                 Intent intent = new Intent(this, SearchActivity.class);
                 intent.putExtra("currentPath", currentPath);
@@ -213,16 +218,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void checkPermission(){
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
-            // temporary fix to prevent crash if current Android version lower than required SDK
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-            }
+            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
         }
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
-            // temporary fix to prevent crash if current Android version lower than required SDK
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-            }
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
         }
     }
 }

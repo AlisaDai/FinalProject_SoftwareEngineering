@@ -1,45 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".ThirdFolderActivity">
-
-    <HorizontalScrollView
-        android:theme="@style/ThemeOverlay.AppCompat.DayNight.ActionBar"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent">
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/currentPath"
-            style="@style/Widget.AppCompat.Toolbar.Button.Navigation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minHeight="50dp" />
-    </HorizontalScrollView>
-    <ListView
-        android:id="@+id/fileListView"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1" />
+        android:orientation="vertical">
+        <HorizontalScrollView
+            android:theme="@style/ThemeOverlay.AppCompat.DayNight.ActionBar"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent">
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/currentPath"
+                style="@style/Widget.AppCompat.Toolbar.Button.Navigation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="50dp" />
+        </HorizontalScrollView>
+        <ListView
+            android:id="@+id/fileListView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/folderExchange"
+            style="@style/TextAppearance.AppCompat.Widget.Button.Borderless.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="166dp"
+            android:layout_weight="1"
+            android:minHeight="50dp">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/folderExchange"
-        style="@style/TextAppearance.AppCompat.Widget.Button.Borderless.Colored"
-        android:layout_width="match_parent"
-        android:layout_height="166dp"
-        android:layout_weight="1"
-        android:minHeight="50dp">
-
-        <ImageButton
-            android:id="@+id/plus"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:scaleType="fitXY"
-            android:contentDescription="@string/btn_plus"
-            android:src="@drawable/plus"
-            android:onClick="addButton" />
-    </androidx.appcompat.widget.Toolbar>
-
-</LinearLayout>
+            <ImageButton
+                android:id="@+id/plus"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:scaleType="fitXY"
+                android:contentDescription="@string/btn_plus"
+                android:src="@drawable/plus"
+                android:onClick="addButton" />
+        </androidx.appcompat.widget.Toolbar>
+    </LinearLayout>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        style="@style/Widget.MaterialComponents.FloatingActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="20dp"
+        app:srcCompat="@android:drawable/ic_input_add"
+        android:tint="@android:color/holo_green_light"/>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

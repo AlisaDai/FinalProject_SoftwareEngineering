@@ -5,22 +5,22 @@ import java.util.Arrays;
 public class FileName {
     /*private String oldName;
     private String newName;
-    private String[] otherNmaes;
+    private String[] otherNames;
     private int filesNum;
      */
 
-    public static boolean ifNeedToChange(String oldNmae, String newName){
-        if(oldNmae.equalsIgnoreCase(newName)){
+    public static boolean ifNeedToChange(String oldName, String newName){
+        if(oldName.equalsIgnoreCase(newName)){
             return false;
         }
         return true;
     }
 
-    public static String correctRepeatName(String newName, String[] otherNmaes){
+    public static String correctRepeatName(String newName, String[] otherNames){
         int num = 0;
         String orgName = newName;
-        Arrays.sort(otherNmaes);
-        for (String tmp : otherNmaes) {
+        Arrays.sort(otherNames);
+        for (String tmp : otherNames) {
             if(tmp.equalsIgnoreCase(newName)){
                 num++;
                 newName = orgName + "_" + num;
@@ -32,12 +32,12 @@ public class FileName {
         return newName;
     }
 
-    public static String[] newMultipleNames(String newName, int filesNum, String[] otherNmaes){
+    public static String[] newMultipleNames(String newName, int filesNum, String[] otherNames){
         String[] newNames = new String[filesNum];
         int num = 0;
         String orgName = newName;
-        Arrays.sort(otherNmaes);
-        for (String tmp : otherNmaes) {
+        Arrays.sort(otherNames);
+        for (String tmp : otherNames) {
             if(tmp.equalsIgnoreCase(newName)){
                 num++;
                 newName = orgName + "_" + num;

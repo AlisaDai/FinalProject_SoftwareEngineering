@@ -18,15 +18,15 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
+
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class ThirdFolderActivity extends AppCompatActivity {
-    //private String currentPath;
     private Folder folder;
-    //private File[] files;
-    //private String[] fileNames;
-    private String selectPath;
     private ArrayList<String> paths = new ArrayList<>();
     private ArrayList<Button> folders = new ArrayList<>();
 
@@ -50,6 +50,14 @@ public class ThirdFolderActivity extends AppCompatActivity {
                 findViewById(R.id.plus).setVisibility(View.GONE);
             }
         }
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Handle the click.
+                forFABButton();
+            }
+        });
     }
 
     @Override
@@ -60,7 +68,6 @@ public class ThirdFolderActivity extends AppCompatActivity {
     }
 
     void updateFolder(){
-        //Log.d("file", currentPath + " has " +paths.size());
         Toolbar pathView = findViewById(R.id.currentPath);
         updatePathButton(pathView);
         ListView listView = findViewById(R.id.fileListView);
@@ -103,15 +110,23 @@ public class ThirdFolderActivity extends AppCompatActivity {
                     alert.setView(input);
                     final String oldName = folder.getFileNames()[position];
                     input.setText(oldName);
+                    input.setId(R.id.renameInputField);
 
                     alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
                             String srt1 = input.getEditableText().toString();
                             //Toast toast = Toast.makeText(SecondFolderActivity.this, "Try to save the file in " + currentPath + " from name " + oldName + " to " + srt1, Toast.LENGTH_SHORT);
                             //toast.show();
-                            changeFileName(oldName, srt1);
+                            if(srt1.length() == 0){
+                                Toast toast = Toast.makeText(ThirdFolderActivity.this, "Successfully delete the file " + oldName, Toast.LENGTH_SHORT);
+                                toast.show();
+                                deleteSelectFile(oldName);
+                            }else{
+                                changeFileName(oldName, srt1);
+                            }
                             //update your listview here
-                            folder = new Folder(folder.getCurrentPath());
+                            paths.remove(paths.size() - 1);
+                            updatePath(paths.size());
                             updateFolder();
                         }
                     });
@@ -167,7 +182,7 @@ public class ThirdFolderActivity extends AppCompatActivity {
     }*/
 
     void updatePath(int num){
-        Log.d("file", "file " + (num-1));// + " is " + paths.get(num-1));
+        //Log.d("file", "file " + (num-1));// + " is " + paths.get(num-1));
         folder.setCurrentPath(paths.get(num-1));
         //currentPath = "";
         //currentPath = paths.get(num-1);
@@ -194,7 +209,7 @@ public class ThirdFolderActivity extends AppCompatActivity {
                         intent = new Intent(v.getContext(), MainActivity.class);
                 }
                 intent.putExtra("buttons", folders.size());
-                intent.putExtra("selectPath", selectPath);
+                //intent.putExtra("selectPath", selectPath);
                 startActivity(intent);
             }
         });
@@ -212,9 +227,9 @@ public class ThirdFolderActivity extends AppCompatActivity {
     void changeFileName(String oldName, String newName){
         if(FileName.ifNeedToChange(oldName, newName)){
             newName = FileName.correctRepeatName(newName, folder.getFileNames());
-            File from = new File(folder.getCurrentPath(), oldName);
+            File from = new File(folder.getParentPath(), oldName);
             if(from.exists()){
-                from.renameTo(new File(folder.getCurrentPath(), newName));
+                from.renameTo(new File(folder.getParentPath(), newName));
                 Toast toast = Toast.makeText(ThirdFolderActivity.this, "Save the file from name " + oldName + " to " + newName + " Successfully", Toast.LENGTH_SHORT);
                 toast.show();
             }
@@ -222,5 +237,65 @@ public class ThirdFolderActivity extends AppCompatActivity {
             Toast toast = Toast.makeText(ThirdFolderActivity.this, "Can't save the file from name " + oldName + " to " + newName, Toast.LENGTH_SHORT);
             toast.show();
         }
+    }
+
+    void deleteSelectFile(String folderName){
+        File file = new File(folder.getParentPath() + File.separator + folderName);
+
+        if (file.exists()) {
+            String deleteCmd = "rm -r " + folder.getParentPath() + File.separator + folderName;
+            Runtime runtime = Runtime.getRuntime();
+            try {
+                runtime.exec(deleteCmd);
+            } catch (IOException e) { }
+        }
+    }
+
+    void forFABButton(){
+        AlertDialog.Builder alert = new AlertDialog.Builder(
+                ThirdFolderActivity.this);
+        alert.setTitle("Add Folder");
+
+        final EditText input = new EditText(ThirdFolderActivity.this);
+        alert.setView(input);
+        input.setId(R.id.createFolderField);
+
+        alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                String srt1 = input.getEditableText().toString();
+                //Toast toast = Toast.makeText(SecondFolderActivity.this, "Try to save the file in " + currentPath + " from name " + oldName + " to " + srt1, Toast.LENGTH_SHORT);
+                //toast.show();
+                createNewFolder(srt1);
+                //update your listview here
+                folder = new Folder(folder.getCurrentPath());
+                updateFolder();
+            }
+        });
+
+        alert.setNegativeButton("CANCEL",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alertDialog = alert.create();
+        alertDialog.show();
+    }
+
+    void createNewFolder(String folderName){
+        File newFolder = new File(folder.getCurrentPath() + File.separator+folderName);
+        boolean success = true;
+        Toast toast;
+        if(!newFolder.exists()){
+            success = newFolder.mkdirs();
+            if(success){
+                toast = Toast.makeText(ThirdFolderActivity.this, "Create the file " + folderName + " Successfully", Toast.LENGTH_SHORT);
+            }else{
+                toast = Toast.makeText(ThirdFolderActivity.this, "Create the file " + folderName + " Failed", Toast.LENGTH_SHORT);
+            }
+        }else{
+            toast = Toast.makeText(ThirdFolderActivity.this, "The file " + folderName + " already exist", Toast.LENGTH_SHORT);
+        }
+        toast.show();
     }
 }

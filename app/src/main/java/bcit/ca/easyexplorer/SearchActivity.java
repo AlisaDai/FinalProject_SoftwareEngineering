@@ -28,6 +28,12 @@ public class SearchActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         resetAll();
         EditText searchBar = findViewById(R.id.searchLine);
         searchBar.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -69,6 +75,7 @@ public class SearchActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(view.getContext(), MainActivity.class);
                 intent.putExtra("currentPath", showedFiles.get(position).getPath());
+                resetAll();
                 startActivity(intent);
             }
         });
